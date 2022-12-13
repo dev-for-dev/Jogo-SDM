@@ -35,7 +35,7 @@ def validacaoResposta(contadorDeFases,ajuda):
         if entrada == "1" and contadorDeFases == 4:
             break
     return entrada
-def jogo(perguntasRespondidas):
+def jogo(perguntasRespondidas,contadorDeJogos):
     contadorDeAcertos=0
     contadorDeFases=0
     continuar = True
@@ -48,9 +48,10 @@ def jogo(perguntasRespondidas):
         if not perguntasRespondidas:
             perguntasFeita.append(perguntas[contadorDeFases][sorte])
         else:
-            print(perguntasRespondidas[0][contadorDeFases])
-            while perguntas[contadorDeFases][sorte] in perguntasRespondidas:
-                sorte=random.randrange(5)
+            for i in range(contadorDeJogos):
+                print(perguntasRespondidas[i][contadorDeFases])
+                while perguntas[contadorDeFases][sorte] in perguntasRespondidas[i]:
+                    sorte=random.randrange(5)
             perguntasFeita.append(perguntas[contadorDeFases][sorte])
         """
         Falta implementar a lógica de pular pergunta, ele pode pular 3x em diferentes fases,
@@ -109,11 +110,14 @@ def jogo(perguntasRespondidas):
 
 repetir = True            
 perguntasRespondidas = []
-
+contadorDeJogos=0
 while repetir:
     print(perguntasRespondidas)
-    perguntasRespondidas.append(jogo(perguntasRespondidas))
-    
+    perguntasRespondidas.append(jogo(perguntasRespondidas,contadorDeJogos))
+    contadorDeJogos += 1
+    if contadorDeJogos == 4:
+        perguntasRespondidas = []
+        contadorDeJogos = 0
     
     reiniciar = input("Deseja jogar novamente (S/N): ").upper()
     
