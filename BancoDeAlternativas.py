@@ -57,11 +57,12 @@ def imprimeAlternativas(i,j,ajuda,certa):
         
         if letras[certa] > errada:
             print(alternativas[i][j][errada])
-            print(correta)
+            print(correta,"\n")
         else:
             print(correta)
-            print(alternativas[i][j][errada])
+            print(alternativas[i][j][errada],"\n")
         return ajuda + 1
     else:
         for i in alternativas[i][j]:
             print(i)
+        print()
