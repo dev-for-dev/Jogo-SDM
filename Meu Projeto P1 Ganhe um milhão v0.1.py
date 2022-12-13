@@ -25,57 +25,79 @@ def imprimePergunta(i,j):
     print(perguntas[i][j],"\n")
 #função para resgatar valores na matriz perguntas e imprimir
 
-def validacaoResposta(contadorDeFases,ajuda):
+def validacaoResposta(contadorDeFases,ajuda,pulos):
     while True:
         entrada=input("Qual é a alternativa certa? ").upper()
         if entrada == "A" or entrada == "B" or entrada == "C" or entrada == "D":
             break
-        if entrada == "2" and contadorDeFases < 4 and ajuda == 0:
+        if entrada == "1" and contadorDeFases < 4 and ajuda == 1:
             print("\n{}ª Fase do jogo".format(contadorDeFases+1))
             break
-        if entrada == "1" and contadorDeFases == 4:
+        if entrada == "2" and contadorDeFases < 4 and pulos > 0:
+            break
+        if entrada == "3" and contadorDeFases == 4:
             break
     return entrada
+
+def pularPergunta(pulos,perguntasPuladas,contadorDeFases,sorte):
+    if pulos > 0:
+        perguntasPuladas.append(perguntas[contadorDeFases][sorte])
+        while perguntas[contadorDeFases][sorte] in perguntasPuladas:
+            sorte=random.randrange(5)
+    return sorte
+            
+def imprimeAuxilio(ajuda,pulos,contadorDeFases):
+    if contadorDeFases < 4:
+        print("Você tem {} ajuda, aperte 1 para usa-la".format(ajuda))
+        print("Você tem {} pulos, aperte 2 para pular\n".format(pulos))
+    else:
+        print("Você NÃO tem mais ajuda")
+        print("Você NÃO tem mais pulos")
+        print("Você pode desistir apertando 3\n")
+
 def jogo(perguntasRespondidas,contadorDeJogos):
     contadorDeAcertos=0
     contadorDeFases=0
     continuar = True
     desistir = False
-    ajuda = 0
+    ajuda = 1
+    pulos = 3
     perguntasFeita = []
+    perguntasPuladas = []
     while contadorDeFases != 5 and continuar:
     #loop crescente para execultar os 5 níveis do jogo, começa no 0 até o 5 e vai de 1 em 1
         sorte=random.randrange(5)
         if not perguntasRespondidas:
             perguntasFeita.append(perguntas[contadorDeFases][sorte])
         else:
-            repetiu = False
             for i in range(contadorDeJogos):
                 while perguntas[contadorDeFases][sorte] in perguntasRespondidas[i][contadorDeFases]:
                     sorte=random.randrange(5)
             perguntasFeita.append(perguntas[contadorDeFases][sorte])
-        """
-        Falta implementar a lógica de pular pergunta, ele pode pular 3x em diferentes fases,
-        menos na última fase independente se ele ainda tem pulos.
-        """
+        
         print("\n{}ª Fase do jogo".format(contadorDeFases+1))
+        imprimeAuxilio(ajuda,pulos,contadorDeFases)
         imprimePergunta(contadorDeFases,sorte)#chamada de função que imprime a pergunta dependendo do nível e número sorteado
         
-        if contadorDeFases < 4 and ajuda == 0:
-            print("Aperte 2 para pedir ajuda\n")
-        if contadorDeFases == 4:
-            print("Você pode desistir apertando 1\n")
         certa = respostas[contadorDeFases][sorte]
         BancoDeAlternativas.imprimeAlternativas(contadorDeFases,sorte,ajuda,certa)#chamada de função que imprime as alternativas dependendo do nível e número sorteado
-        entrada = validacaoResposta(contadorDeFases,ajuda)
-        
-        if entrada == "2":
-            imprimePergunta(contadorDeFases,sorte)
-            ajuda = ajuda + 1
-            ajuda = BancoDeAlternativas.imprimeAlternativas(contadorDeFases,sorte,ajuda,certa)
-            entrada = validacaoResposta(contadorDeFases,ajuda)
-        
-        if entrada == "1":
+        entrada = validacaoResposta(contadorDeFases,ajuda,pulos)
+
+        while entrada == "2" and pulos > 0 or entrada == "1":
+            if entrada == "2":
+                sorte = pularPergunta(pulos,perguntasPuladas,contadorDeFases,sorte)
+                pulos -= 1
+                imprimeAuxilio(ajuda,pulos,contadorDeFases)
+                imprimePergunta(contadorDeFases,sorte)
+                BancoDeAlternativas.imprimeAlternativas(contadorDeFases,sorte,ajuda,certa)
+            if entrada == "1":
+                ajuda += 1
+                imprimeAuxilio(ajuda-2,pulos,contadorDeFases)
+                imprimePergunta(contadorDeFases,sorte)
+                ajuda = BancoDeAlternativas.imprimeAlternativas(contadorDeFases,sorte,ajuda,certa)
+            entrada = validacaoResposta(contadorDeFases,ajuda,pulos)
+
+        if entrada == "3":
             continuar = False
             desistir = True
             

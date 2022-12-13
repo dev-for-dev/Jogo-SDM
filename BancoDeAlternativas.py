@@ -48,7 +48,7 @@ def banco_de_alternativas():#função sem parâmetro de entrada que retorna uma 
 def imprimeAlternativas(i,j,ajuda,certa):
     alternativas = banco_de_alternativas()
     letras={"A":0,"B":1,"C":2,"D":3}
-    if ajuda == 1:
+    if ajuda == 2:
         correta=alternativas[i][j][letras[certa]]
         
         errada=random.randrange(4)
@@ -61,7 +61,7 @@ def imprimeAlternativas(i,j,ajuda,certa):
         else:
             print(correta)
             print(alternativas[i][j][errada],"\n")
-        return ajuda + 1
+        return ajuda - 2
     else:
         for i in alternativas[i][j]:
             print(i)
