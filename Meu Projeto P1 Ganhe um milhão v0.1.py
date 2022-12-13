@@ -46,21 +46,15 @@ def jogo(perguntasRespondidas):
     #loop crescente para execultar os 5 níveis do jogo, começa no 0 até o 5 e vai de 1 em 1
         sorte=random.randrange(5)
         if not perguntasRespondidas:
-            pergunta=[]
-            pergunta.append(perguntas[contadorDeFases][sorte])
-            perguntasFeita.append(pergunta)
+            perguntasFeita.append(perguntas[contadorDeFases][sorte])
         else:
             print(perguntasRespondidas[0][contadorDeFases])
-            while perguntas[contadorDeFases][sorte] == perguntasRespondidas[0][contadorDeFases]:
+            while perguntas[contadorDeFases][sorte] in perguntasRespondidas:
                 sorte=random.randrange(5)
-            pergunta=[]
-            pergunta.append(perguntas[contadorDeFases][sorte])
-            perguntasFeita.append(pergunta)
+            perguntasFeita.append(perguntas[contadorDeFases][sorte])
         """
         Falta implementar a lógica de pular pergunta, ele pode pular 3x em diferentes fases,
         menos na última fase independente se ele ainda tem pulos.
-        guardar a pergunta já feita daquela fase específica, e quando ele selecionar jogar novamente
-        vir outra pergunta.
         """
         print("{}ª Fase".format(contadorDeFases+1))
         imprimePergunta(contadorDeFases,sorte)#chamada de função que imprime a pergunta dependendo do nível e número sorteado
@@ -115,9 +109,11 @@ def jogo(perguntasRespondidas):
 
 repetir = True            
 perguntasRespondidas = []
+
 while repetir:
     print(perguntasRespondidas)
     perguntasRespondidas.append(jogo(perguntasRespondidas))
+    
     
     reiniciar = input("Deseja jogar novamente (S/N): ").upper()
     
