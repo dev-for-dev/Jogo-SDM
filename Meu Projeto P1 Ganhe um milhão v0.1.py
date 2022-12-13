@@ -46,14 +46,35 @@ def pularPergunta(pulos,perguntasPuladas,contadorDeFases,sorte):
             sorte=random.randrange(5)
     return sorte
             
-def imprimeAuxilio(ajuda,pulos,contadorDeFases):
+def imprimeAuxilio(ajuda,pulos,contadorDeFases,contadorDeAcertos,desistir,dinheiro):
     if contadorDeFases < 4:
+        print("\n{}ª Fase do jogo valendo {:.2f} R$".format(contadorDeFases+1,premio(contadorDeFases,contadorDeAcertos,desistir,dinheiro)*2))
         print("Você tem {} ajuda, aperte 1 para usa-la".format(ajuda))
         print("Você tem {} pulos, aperte 2 para pular\n".format(pulos))
     else:
+        print("\n{}ª Fase do jogo valendo {:.2f} R$".format(contadorDeFases+1,1000000))
         print("Você NÃO tem mais ajuda")
         print("Você NÃO tem mais pulos")
         print("Você pode desistir apertando 3\n")
+
+def premio(contadorDeFases,contadorDeAcertos,desistir,dinheiro):
+    if contadorDeFases == 0:
+         dinheiro = dinheiro/2
+    else:
+        if contadorDeAcertos == 1:
+            dinheiro = (dinheiro*10)/2
+        elif contadorDeAcertos == 2:
+            dinheiro = (dinheiro*100)/2
+        elif contadorDeAcertos == 3:
+            dinheiro = (dinheiro*500)/2
+        elif contadorDeAcertos == 4:
+            if desistir:
+                dinheiro = (dinheiro*500)
+            else:
+                dinheiro = (dinheiro*500)/2
+        elif contadorDeAcertos == 5:
+            dinheiro = (dinheiro*1000)
+    return dinheiro
 
 def jogo(perguntasRespondidas,contadorDeJogos):
     contadorDeAcertos=0
@@ -64,19 +85,19 @@ def jogo(perguntasRespondidas,contadorDeJogos):
     pulos = 3
     perguntasFeita = []
     perguntasPuladas = []
-    while contadorDeFases != 5 and continuar:
-    #loop crescente para execultar os 5 níveis do jogo, começa no 0 até o 5 e vai de 1 em 1
+    dinheiro = 1000.00
+    while contadorDeFases != 5 and continuar:#loop crescente para execultar os 5 níveis do jogo, começa no 0 até o 5 e vai de 1 em 1
         sorte=random.randrange(5)
-        if not perguntasRespondidas:
+        if contadorDeJogos == 1:
             perguntasFeita.append(perguntas[contadorDeFases][sorte])
         else:
             for i in range(contadorDeJogos):
                 while perguntas[contadorDeFases][sorte] in perguntasRespondidas[i][contadorDeFases]:
                     sorte=random.randrange(5)
             perguntasFeita.append(perguntas[contadorDeFases][sorte])
+
         
-        print("\n{}ª Fase do jogo".format(contadorDeFases+1))
-        imprimeAuxilio(ajuda,pulos,contadorDeFases)
+        imprimeAuxilio(ajuda,pulos,contadorDeFases,contadorDeAcertos,desistir,dinheiro)
         imprimePergunta(contadorDeFases,sorte)#chamada de função que imprime a pergunta dependendo do nível e número sorteado
         
         certa = respostas[contadorDeFases][sorte]
@@ -87,12 +108,12 @@ def jogo(perguntasRespondidas,contadorDeJogos):
             if entrada == "2":
                 sorte = pularPergunta(pulos,perguntasPuladas,contadorDeFases,sorte)
                 pulos -= 1
-                imprimeAuxilio(ajuda,pulos,contadorDeFases)
+                imprimeAuxilio(ajuda,pulos,contadorDeFases,contadorDeAcertos,desistir,dinheiro)
                 imprimePergunta(contadorDeFases,sorte)
                 BancoDeAlternativas.imprimeAlternativas(contadorDeFases,sorte,ajuda,certa)
             if entrada == "1":
                 ajuda += 1
-                imprimeAuxilio(ajuda-2,pulos,contadorDeFases)
+                imprimeAuxilio(ajuda-2,pulos,contadorDeFases,contadorDeAcertos,desistir,dinheiro)
                 imprimePergunta(contadorDeFases,sorte)
                 ajuda = BancoDeAlternativas.imprimeAlternativas(contadorDeFases,sorte,ajuda,certa)
             entrada = validacaoResposta(contadorDeFases,ajuda,pulos)
@@ -113,22 +134,8 @@ def jogo(perguntasRespondidas,contadorDeJogos):
                 print("Você desistiu!")
                 continuar = False
             
-    if contadorDeFases == 0:
-        print("Você ganhou 500,00 Reais")
-    else:
-        if contadorDeAcertos == 1:
-            print("Você ganhou 5.000,00 Reais")
-        elif contadorDeAcertos == 2:
-            print("Você ganhou 50.000,00 Reais")
-        elif contadorDeAcertos == 3:
-            print("Você ganhou 250.000,00 Reais")
-        elif contadorDeAcertos == 4:
-            if desistir:
-                print("Você ganhou 500.000,00 Reais")
-            else:
-                print("Você ganhou 250.000,00 Reais")
-        elif contadorDeAcertos == 5:
-            print("Você ganhou 1.000.000,00 Reais")
+    
+    print("Você ganhou {:.2f} Reais".format(premio(contadorDeFases,contadorDeAcertos,desistir,dinheiro)))
     return perguntasFeita
 
 repetir = True            
