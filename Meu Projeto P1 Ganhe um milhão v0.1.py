@@ -35,19 +35,31 @@ def validacaoResposta(contadorDeFases,ajuda):
         if entrada == "1" and contadorDeFases == 4:
             break
     return entrada
-def jogo():
+def jogo(perguntasRespondidas):
     contadorDeAcertos=0
     contadorDeFases=0
     continuar = True
     desistir = False
     ajuda = 0
+    perguntasFeita = []
     while contadorDeFases != 5 and continuar:
     #loop crescente para execultar os 5 níveis do jogo, começa no 0 até o 5 e vai de 1 em 1
         sorte=random.randrange(5)
+        if not perguntasRespondidas:
+            pergunta=[]
+            pergunta.append(perguntas[contadorDeFases][sorte])
+            perguntasFeita.append(pergunta)
+        else:
+            print(perguntasRespondidas[0][contadorDeFases])
+            while perguntas[contadorDeFases][sorte] == perguntasRespondidas[0][contadorDeFases]:
+                sorte=random.randrange(5)
+            pergunta=[]
+            pergunta.append(perguntas[contadorDeFases][sorte])
+            perguntasFeita.append(pergunta)
         """
         Falta implementar a lógica de pular pergunta, ele pode pular 3x em diferentes fases,
         menos na última fase independente se ele ainda tem pulos.
-        guardar a pergunta já feitas daquela fase específica, e quando ele selecionar repetir
+        guardar a pergunta já feita daquela fase específica, e quando ele selecionar jogar novamente
         vir outra pergunta.
         """
         print("{}ª Fase".format(contadorDeFases+1))
@@ -99,11 +111,13 @@ def jogo():
                 print("Você ganhou 250.000,00 Reais")
         elif contadorDeAcertos == 5:
             print("Você ganhou 1.000.000,00 Reais")
+    return perguntasFeita
 
 repetir = True            
-
+perguntasRespondidas = []
 while repetir:
-    jogo()
+    print(perguntasRespondidas)
+    perguntasRespondidas.append(jogo(perguntasRespondidas))
     
     reiniciar = input("Deseja jogar novamente (S/N): ").upper()
     
