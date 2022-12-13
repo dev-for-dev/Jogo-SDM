@@ -48,9 +48,10 @@ def jogo(perguntasRespondidas,contadorDeJogos):
         if not perguntasRespondidas:
             perguntasFeita.append(perguntas[contadorDeFases][sorte])
         else:
+            repetiu = False
             for i in range(contadorDeJogos):
                 print(perguntasRespondidas[i][contadorDeFases])
-                while perguntas[contadorDeFases][sorte] in perguntasRespondidas[i]:
+                while perguntas[contadorDeFases][sorte] in perguntasRespondidas[i][contadorDeFases]:
                     sorte=random.randrange(5)
             perguntasFeita.append(perguntas[contadorDeFases][sorte])
         """
@@ -115,7 +116,7 @@ while repetir:
     print(perguntasRespondidas)
     perguntasRespondidas.append(jogo(perguntasRespondidas,contadorDeJogos))
     contadorDeJogos += 1
-    if contadorDeJogos == 4:
+    if contadorDeJogos == 5:
         perguntasRespondidas = []
         contadorDeJogos = 0
     
